@@ -77,6 +77,10 @@
         </div>
     </section>
 
+    <div class="map">
+        <div id="yandexMap" style="width: 100%; height: 590px;"></div>
+    </div>
+
     <footer class="footer-section">
         <div class="container">
             <div class="row">
@@ -132,6 +136,27 @@
             </div>
         </div>
     </footer>
+
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=748f4927-077a-4a37-85e3-12a909fb54f6&lang=ru_RU" type="text/javascript"></script>
+    
+    <script>
+        ymaps.ready(init);
+    
+        function init() {
+            var myMap = new ymaps.Map('yandexMap', {
+                center: [55.7558, 37.6176], // Координаты центра карты (центр Москвы)
+                zoom: 10 // Уровень масштабирования
+            });
+    
+            // Добавление метки
+            var myPlacemark = new ymaps.Placemark([55.7558, 37.6176], {
+                hintContent: 'Москва!',
+                balloonContent: 'Столица России'
+            });
+    
+            myMap.geoObjects.add(myPlacemark);
+        }
+    </script>
 
 </body>
 
