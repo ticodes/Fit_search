@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         echo "Регистрация успешна. Данные добавлены в базу данных.";
-        header("Location: index.html");
+        header("Location: test.php");
         exit();
     } else {
         echo "Ошибка при регистрации: " . $stmt->error;
