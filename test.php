@@ -87,7 +87,7 @@ $conn->close();
             background-color: #ff6666;
         }
 
-        /* Новые стили для улучшенного внешнего вида */
+    
         .container {
             width: 80%;
             margin: 0 auto;
@@ -114,13 +114,17 @@ $conn->close();
         .buttons-container {
             margin-top: 10px;
         }
+
+        #groupButtonContainer {
+            text-align: right;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="container">
-        <h2>Таблица данных</h2>
+        <h2>Критерии выбора</h2>
 
         <form id="columnsForm">
             <?php
@@ -156,12 +160,12 @@ $conn->close();
             }
             ?>
             <div class="buttons-container">
-                <button type="button" onclick="showSelectedColumns()">Показать выбранные столбцы</button>
+                <button type="button" onclick="showSelectedColumns()">Показать выбранные критерии</button>
             </div>
         </form>
 
         <form id="filterForm">
-            <label for="search">Поиск:</label>
+            <label for="search">Поиск (по ключевому слову из таблицы):</label>
             <input type="text" id="search" name="search">
             <br>
             <label><input type="radio" name="filter" value="all" checked>Все</label>
@@ -170,6 +174,12 @@ $conn->close();
                 <button type="button" onclick="filterTable()">Применить фильтр</button>
             </div>
         </form>
+
+        
+        <div id="groupButtonContainer" class="buttons-container">
+            <button type="button" onclick="toggleGrouping()">Кол-во залов по районам</button>
+        </div>
+        <div id="groupingResults"></div>
 
         <table id="datasetTable">
             <thead id="tableHead">
@@ -196,6 +206,7 @@ $conn->close();
                 ?>
             </tbody>
         </table>
+
     </div>
 
     <script>
@@ -266,6 +277,33 @@ $conn->close();
                 } else {
                     tr[i].style.display = "none";
                 }
+            }
+        }
+
+        function runGroupingProcedure() {
+            // Используем AJAX для вызова процедуры на сервере
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Обновляем область с результатами
+                    document.getElementById("groupingResults").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.open("GET", "group_gyms_by_district.php", true);
+            xhr.send();
+        }
+
+        function toggleGrouping() {
+            var datasetTable = document.getElementById('datasetTable');
+            var groupingResults = document.getElementById('groupingResults');
+            var groupingButton = document.getElementById('groupingButton');
+
+            if (datasetTable.style.display === 'none') {
+                datasetTable.style.display = 'table';
+                groupingResults.innerHTML = ''; // Очищаем результаты группировки
+            } else {
+                datasetTable.style.display = 'none';
+                runGroupingProcedure(); // Показываем результаты группировки
             }
         }
     </script>
